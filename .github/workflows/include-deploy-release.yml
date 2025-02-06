@@ -105,5 +105,5 @@ jobs:
          set +x
          sh ./tools/publish_release.sh "${{ secrets.MAVEN_CENTRAL_USER_TOKEN }}" "${{ secrets.MAVEN_CENTRAL_USER_TOKEN_PASSWORD }}" \
          "${{ secrets.GRADLE_PORTAL_KEY }}" "${{ secrets.GRADLE_PORTAL_SECRET }}" \
-         '-PsignBuild=true -PsignSecretRingFileKotlin="${{ secrets.GPG_SIGNING_KEY_BASE_64_DBG }}" -PsignPasswordKotlin=${{ secrets.GPG_PASS_PHRASE_DBG }} -Prealm.kotlin.copyNativeJvmLibs=linux,windows'
+         '-PsignBuild=false -Prealm.kotlin.copyNativeJvmLibs=linux,windows'
         
