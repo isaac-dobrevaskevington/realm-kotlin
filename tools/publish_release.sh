@@ -20,7 +20,7 @@ set -e
 
 usage() {
 cat <<EOF
-Usage: $0 <maven_central_user> <maven_central_key> <realm_s3_access_key> <realm_s3_secret_key> <docs_s3_access_key> <docs_s3_secret_key> <slack-webhook-releases-url> <slack-webhook-java-ci-url> <gradle-plugin-portal-key> <gradle-plugin-portal-secret> <gradle-assemble-build-params>
+Usage: $0 <maven_central_user> <maven_central_key> <gradle-plugin-portal-key> <gradle-plugin-portal-secret> <gradle-assemble-build-params>
 Usage: $0 verify
 EOF
 }
