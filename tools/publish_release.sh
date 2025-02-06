@@ -18,18 +18,6 @@ set -e
 # Input Validation
 ######################################
 
-usage() {
-cat <<EOF
-Usage: $0 <maven_central_user> <maven_central_key> <gradle-plugin-portal-key> <gradle-plugin-portal-secret> <gradle-assemble-build-params>
-Usage: $0 verify
-EOF
-}
-
-if [ "$#" -ne 11 ] && [ "$1" != "verify" ]; then
-  usage
-  exit 1
-fi
-
 ######################################
 # Define Release steps
 ######################################
@@ -39,9 +27,9 @@ REALM_KOTLIN_PATH="$HERE/.."
 RELEASE_VERSION=""
 MAVEN_CENTRAL_USER="$1"
 MAVEN_CENTRAL_KEY="$2"
-GRADLE_PORTAL_KEY="$9"
-GRADLE_PORTAL_SECRET="${10}"
-GRADLE_BUILD_PARAMS="${11}"
+GRADLE_PORTAL_KEY="$3"
+GRADLE_PORTAL_SECRET="${4}"
+GRADLE_BUILD_PARAMS="${5}"
 
 abort_release() {
   # Reporting failures to #realm-java-team-ci is done from Jenkins
