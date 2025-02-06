@@ -39,12 +39,6 @@ REALM_KOTLIN_PATH="$HERE/.."
 RELEASE_VERSION=""
 MAVEN_CENTRAL_USER="$1"
 MAVEN_CENTRAL_KEY="$2"
-REALM_S3_ACCESS_KEY="$3"
-REALM_S3_SECRET_KEY="$4"
-DOCS_S3_ACCESS_KEY="$5"
-DOCS_S3_SECRET_KEY="$6"
-SLACK_WEBHOOK_RELEASES_URL="$7"
-SLACK_WEBHOOK_JAVA_CI_URL="$8"
 GRADLE_PORTAL_KEY="$9"
 GRADLE_PORTAL_SECRET="${10}"
 GRADLE_BUILD_PARAMS="${11}"
@@ -122,46 +116,8 @@ publish_artifacts() {
   cd $HERE
 }
 
-upload_debug_symbols() {
-  echo "Uploading native debug symbols..."
-  cd $REALM_KOTLIN_PATH
-  ./gradlew uploadReleaseMetaData -PREALM_S3_ACCESS_KEY=$REALM_S3_ACCESS_KEY -PREALM_S3_SECRET_KEY=$REALM_S3_SECRET_KEY
-  cd $HERE
-}
 
-upload_dokka() {
-  echo "Uploading docs..."
-  cd $REALM_KOTLIN_PATH/packages
-  ./gradlew :uploadDokka -PSDK_DOCS_AWS_ACCESS_KEY=$DOCS_S3_ACCESS_KEY -PSDK_DOCS_AWS_SECRET_KEY=$DOCS_S3_SECRET_KEY
-  cd $HERE
-}
 
-notify_slack_channels() {
-  echo "Notifying Slack channels..."
-
-  # Read entry with release version. Link is the value with ".",")","(" and space removed.
-  command="grep '## $RELEASE_VERSION' $REALM_KOTLIN_PATH/CHANGELOG.md | cut -c 4- | sed -e 's/[.)(]//g' | sed -e 's/ /-/g'"
-  tag=`eval $command`
-  if [ -z "$tag" ]
-  then
-    echo "\$tag did not resolve correctly. Aborting."
-    abort_release
-  fi
-  current_commit=`git rev-parse HEAD`
-  if [ -z "$current_commit" ]
-  then
-    echo "Could not find current commit. Aborting."
-    abort_release
-  fi
-
-  link_to_changelog="https://github.com/realm/realm-kotlin/blob/$current_commit/CHANGELOG.md#$tag"
-  payload="{ \"username\": \"Realm CI\", \"icon_emoji\": \":realm_new:\", \"text\": \"<$link_to_changelog|*Realm Kotlin $RELEASE_VERSION has been released*>\\nSee the Release Notes for more details. Note, it can take up to 10 minutes before the release is visible on Maven Central.\" }"
-  echo $link_to_changelog
-  echo "Pinging #realm-releases"
-  curl -X POST --data-urlencode "payload=${payload}" ${SLACK_WEBHOOK_RELEASES_URL}
-  echo "Pinging #realm-java-team-ci"
-  curl -X POST --data-urlencode "payload=${payload}" ${SLACK_WEBHOOK_JAVA_CI_URL}
-}
 
 ######################################
 # Run Release steps
@@ -174,7 +130,4 @@ verify_changelog
 if [ "$1" != "verify" ]; then
   create_javadoc
   publish_artifacts
-  upload_debug_symbols
-  upload_dokka
-  notify_slack_channels
 fi
