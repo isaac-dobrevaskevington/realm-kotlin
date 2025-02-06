@@ -17,8 +17,8 @@ jobs:
       - name: Setup Java 11
         uses: actions/setup-java@v4
         with:
-          distribution: ${{ vars.VERSION_JAVA_DISTRIBUTION  }}
-          java-version: ${{ vars.VERSION_JAVA }}
+          distribution: corretto
+          java-version: 11
 
       - name: Setup Gradle and task/dependency caching
         uses: gradle/actions/setup-gradle@v3
@@ -27,13 +27,9 @@ jobs:
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v2
-        with:
-          cmake-version: ${{ vars.VERSION_CMAKE }}
 
       - name: Setup ninja
         uses: clementetb/setup-ninja@master
-        with:
-          version: ${{ vars.VERSION_NINJA  }}
 
       - name: Install ccache
         uses: hendrikmuhs/ccache-action@v1.2.13
