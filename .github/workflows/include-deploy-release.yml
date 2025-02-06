@@ -1,15 +1,7 @@
 name: Deploy release
 
 on:
-  workflow_call:
-    inputs:
-      version-label:
-        required: true
-        type: string
-
-      packages-sha-label:
-        required: true
-        type: string
+  push
 
 jobs:
   deploy:
